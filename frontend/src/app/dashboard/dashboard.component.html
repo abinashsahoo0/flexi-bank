@@ -1,0 +1,58 @@
+<main>
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+    <section>
+      <div class="card">
+        <h3>Number of Withdrawal</h3>
+        <p>10</p>
+      </div>
+      <div class="card">
+        <h3>Number of Deposit</h3>
+        <p>10</p>
+      </div>
+      <div class="card">
+        <h3>Number of Transfer</h3>
+        <p>10</p>
+      </div>
+      <div class="table-container">
+        <h2>Last 5 Transactions</h2>
+        <table aria-describedby="Account detail"> 
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Transaction mode</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>6 may 2024</td>
+              <td>CREDIT</td>
+              <td>{{ 12490.98 | currency : "INR" }}</td>
+            </tr>
+            <tr>
+              <td>6 may 2024</td>
+              <td>CREDIT</td>
+              <td>{{ 42490.98 | currency : "INR" }}</td>
+            </tr>
+            <tr>
+              <td>6 may 2024</td>
+              <td>CREDIT</td>
+              <td>{{ 48690.98 | currency : "INR" }}</td>
+            </tr>
+            <tr>
+              <td>6 may 2024</td>
+              <td>CREDIT</td>
+              <td>{{ 48690.98 | currency : "INR" }}</td>
+            </tr>
+            <tr>
+              <td>6 may 2024</td>
+              <td>CREDIT</td>
+              <td>{{ 48690.98 | currency : "INR" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  
