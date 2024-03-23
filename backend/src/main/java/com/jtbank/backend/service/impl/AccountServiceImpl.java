@@ -1,9 +1,12 @@
 package com.jtbank.backend.service.impl;
 
+import com.jtbank.backend.constant.TransactionMode;
 import com.jtbank.backend.model.Account;
+import com.jtbank.backend.model.Transaction;
 import com.jtbank.backend.repository.AccountRepository;
 import com.jtbank.backend.repository.AddressRepository;
 import com.jtbank.backend.service.IAccountService;
+import com.jtbank.backend.service.ITransactionService;
 import com.jtbank.backend.utility.GenerateAccountNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +26,7 @@ import java.util.NoSuchElementException;
 public class AccountServiceImpl implements IAccountService {
     private final AccountRepository accountRepository;
     private final AddressRepository addressRepository;
+    private final ITransactionService transactionService;
 
     @Value("${upload.file.name}")
     private String uploadFileLocation;
@@ -54,14 +58,12 @@ public class AccountServiceImpl implements IAccountService {
         existingAccount.setAccountType(account.getAccountType());
 
         if (existingAccount.getAddress() != null) {
-            account.getAddress().setAccount(existingAccount);
             account.getAddress().setAddressId(existingAccount.getAddress().getAddressId());
-            System.out.println(account.getAddress().getAddressId() + " " +
-                    account.getAddress().getAccount().getAccountSlNo());
-        } else {
-            existingAccount.setAddress(account.getAddress());
+
         }
 
+        account.getAddress().setAccount(existingAccount);
+        existingAccount.setAddress(account.getAddress());
 
 //        addressRepository.save(account.getAddress());
         accountRepository.save(existingAccount);
@@ -90,7 +92,15 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public void depositBalance(long accountNumber, double balance) {
+        System.out.println(Thread.currentThread().getName());
+        var account = getAccount(accountNumber);
         accountRepository.addBalance(accountNumber, balance);
+
+        var transaction = new Transaction();
+        transaction.setMode(TransactionMode.CREDIT);
+        transaction.setAmount(balance);
+
+        transactionService.addTransaction(transaction, accountNumber);
     }
 
     @Override

@@ -5,11 +5,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.io.File;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditingImpl")
+@EnableAsync
 public class BackendApplication implements CommandLineRunner {
 	@Value("${upload.file.name}")
 	private String uploadFileLocation;

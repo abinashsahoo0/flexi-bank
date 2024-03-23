@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 import { Account } from '../model/account';
 import { AccountService, BASE_URL } from '../services/account.service';
 
+const DEFAULT_PROFILE = "../../assets/images.png";
+
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -17,7 +19,7 @@ import { AccountService, BASE_URL } from '../services/account.service';
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit {
-  math = Math;
+  profilePicture = DEFAULT_PROFILE;
   base_url = BASE_URL;
   accountService = inject(AccountService);
   modalVisible = false;
@@ -28,6 +30,7 @@ export class ProfileComponent implements OnInit {
     this.accountService.getCurrentAccount().subscribe({
       next: res => {
         this.account = res;
+        this.setImage();
       },
       error: err => {
         console.log(err);
@@ -38,8 +41,14 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  setImage() {
+    const date = new Date();
+    this.profilePicture = BASE_URL + "/" + this.account.accountNumber +
+    "/image?r=" + date.getTime();
+  }
+
   alternativeImage(img: HTMLImageElement) {
-    img.src = "../../assets/images.png";
+    img.src = DEFAULT_PROFILE;
   }
 
   onImageSubmit(form: HTMLFormElement) {
@@ -47,6 +56,7 @@ export class ProfileComponent implements OnInit {
       next: res => {
         this.account = res;
         this.generateToast("Success", "Profile updated")
+        this.setImage()
       },
       error: err => {
         console.log(err);

@@ -5,8 +5,7 @@
     <section>
         <div class="profile-container">
             <div>
-                <img #profilePic [src]="base_url + '/' + account.accountNumber + 
-                '/image'" alt="no img" role="button"
+                <img #profilePic [src]="profilePicture" alt="no img" role="button"
                     title="edit" (click)="modalVisible = !modalVisible" 
                     (error)="alternativeImage(profilePic)" />
 
