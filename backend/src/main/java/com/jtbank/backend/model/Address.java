@@ -4,12 +4,15 @@ import com.jtbank.backend.model.helper.Auditing;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Getter
+@Setter
 public class Address extends Auditing {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -35,6 +35,6 @@ public class Account extends Auditing {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "address_id")
     private Address address;
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "account")
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "account", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 }

@@ -28,16 +28,20 @@ aside li {
 
 
 
-aside a {
+aside a, button {
+    outline: none;
+    border: none;
+    background-color: transparent;
     color: var(--secondary-white);
     text-decoration: none;
     font-size: large;
     display: block;
     padding: 0.5rem;
     border-radius: 0.5rem;
+    cursor: pointer;
 }
 
-aside a:hover,
+aside a:hover, button:hover,
 .active {
     background-color: var(--secondary-purple);
 }

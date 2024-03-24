@@ -24,7 +24,7 @@ export class WithdrawalComponent {
       const balance = form.value.balance;
       this.accountService.withdrawalBalance(balance).subscribe({
         next: res => {
-          this.generateToast("Success", "Amount withdrawaled");
+          this.generateToast("Success", "hdrawaled");
         },
         error: err => {
           console.log(err);

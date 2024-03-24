@@ -110,6 +110,12 @@ public class AccountServiceImpl implements IAccountService {
             throw new RuntimeException("Insufficient balance");
 
         accountRepository.deductBalance(accountNumber, balance);
+
+        var transaction = new Transaction();
+        transaction.setMode(TransactionMode.DEBIT);
+        transaction.setAmount(balance);
+
+        transactionService.addTransaction(transaction, accountNumber);
     }
 
     @Transactional
@@ -129,6 +135,12 @@ public class AccountServiceImpl implements IAccountService {
 
         accountRepository.addBalance(receiver, balance);
         accountRepository.deductBalance(sender, balance);
+
+        var transaction = new Transaction();
+        transaction.setMode(TransactionMode.TRANSFER);
+        transaction.setAmount(balance);
+
+        transactionService.addTransaction(transaction, sender);
     }
 
 
