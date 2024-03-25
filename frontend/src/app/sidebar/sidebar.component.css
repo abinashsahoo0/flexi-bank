@@ -43,5 +43,5 @@ aside a, button {
 
 aside a:hover, button:hover,
 .active {
-    background-color: var(--secondary-purple);
+    background-color: var(--secondary-purple) !important;
 }

@@ -1,7 +1,8 @@
 package com.jtbank.backend.controller;
 
+import com.jtbank.backend.constant.TransactionMode;
+import com.jtbank.backend.dto.DatatableDTO;
 import com.jtbank.backend.dto.TransactionDTO;
-import com.jtbank.backend.mapper.AccountMapper;
 import com.jtbank.backend.mapper.TransactionMapper;
 import com.jtbank.backend.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
@@ -15,23 +16,27 @@ import java.util.List;
 public class TransactionController {
     private final ITransactionService service;
 
-    @GetMapping("/{accountNumber}/credit")
-    public List<TransactionDTO> creditedTransactions(@PathVariable long accountNumber,
-                                                     @RequestParam(required = false, defaultValue = "1") int pageNumber,
-                                                     @RequestParam(required = false, defaultValue = "10") int pageSize) {
+    @GetMapping("/credit")
+    public DatatableDTO creditedTransactions(@RequestHeader long accountNumber,
+                                             @RequestParam(required = false, defaultValue = "1") int pageNumber,
+                                             @RequestParam(required = false, defaultValue = "10") int pageSize) {
         var results = service.getCreditedTransactions(accountNumber, pageNumber, pageSize);
-        return results.stream().map(TransactionMapper::dtoMapper).toList();
+        var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
+
+        var totalRecord = service.countRecord(TransactionMode.CREDIT, accountNumber);
+
+        return new DatatableDTO(totalRecord, pageNumber, pageSize, transactions);
     }
 
     @GetMapping("/{accountNumber}/debit")
-    public List<TransactionDTO> debitedTransactions(@PathVariable long accountNumber) {
+    public List<TransactionDTO> debitedTransactions(@RequestHeader long accountNumber) {
         var results = service.getDebitedTransactions(accountNumber);
         return results.stream().map(TransactionMapper::dtoMapper).toList();
     }
 
     @GetMapping("/{accountNumber}/transfer")
-    public List<TransactionDTO> transferedTransactions(@PathVariable long accountNumber) {
-        var results = service.getTransferedTransactions(accountNumber);
+    public List<TransactionDTO> transferedTransactions(@RequestHeader long accountNumber) {
+        var results = service.getTransferredTransactions(accountNumber);
         return results.stream().map(TransactionMapper::dtoMapper).toList();
     }
 }

@@ -16,66 +16,35 @@
                 </tr>
             </thead>
             <tbody>
+                @if (datatable) {
+                @for (transaction of datatable.transactions; track transaction.timestamp) {
                 <tr>
-                    <td>2 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 12490.98 | currency : "INR" }}</td>
+                    <td>{{transaction.timestamp}}</td>
+                    <td>{{transaction.mode}}</td>
+                    <td>{{ transaction.balance | currency : "INR" }}</td>
                 </tr>
+                } @empty {
                 <tr>
-                    <td>4 aprial 2023</td>
-                    <td>CREDIT</td>
-                    <td>{{ 42490.98 | currency : "INR" }}</td>
+                    <td colspan="3">NO record found</td>
                 </tr>
+                }
+                } @else {
                 <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 48690.98 | currency : "INR" }}</td>
+                    <td colspan="3">NO record found</td>
                 </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 48690.98 | currency : "INR" }}</td>
-                </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 48690.98 | currency : "INR" }}</td>
-                </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 12490.98 | currency : "INR" }}</td>
-                </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 42490.98 | currency : "INR" }}</td>
-                </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 48690.98 | currency : "INR" }}</td>
-                </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 48690.98 | currency : "INR" }}</td>
-                </tr>
-                <tr>
-                    <td>6 may 2024</td>
-                    <td>CREDIT</td>
-                    <td>{{ 48690.98 | currency : "INR" }}</td>
-                </tr>
+                }
             </tbody>
         </table>
+        @if(datatable) {
         <div class="paging">
-            <p>showing 1 to 10 of 500 entries</p>
+            <p>showing {{datatable.pageNumber}} to {{pageSize}} of {{datatable.totalRecord}} entries</p>
             <div class="page">
-                @for (item of totalRecord; track $index) {
-                <button>{{ $index + 1 }}</button>
+                @for (item of totalPage; track $index) {
+                <button (click)="onPageChange($index + 1)">{{ $index + 1 }}</button>
                 }
             </div>
         </div>
+        }
     </section>
 </main>
 

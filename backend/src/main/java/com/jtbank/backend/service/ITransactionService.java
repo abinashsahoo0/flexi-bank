@@ -1,5 +1,6 @@
 package com.jtbank.backend.service;
 
+import com.jtbank.backend.constant.TransactionMode;
 import com.jtbank.backend.model.Transaction;
 
 import java.util.List;
@@ -11,5 +12,7 @@ public interface ITransactionService {
 
     List<Transaction> getCreditedTransactions(long accountNumber, int pageSize, int pageNumber);
 
-    List<Transaction> getTransferedTransactions(long accountNumber);
+    List<Transaction> getTransferredTransactions(long accountNumber);
+
+    long countRecord(TransactionMode mode, long accountNumber);
 }

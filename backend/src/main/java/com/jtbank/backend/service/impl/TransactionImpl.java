@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,7 +24,8 @@ public class TransactionImpl implements ITransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
 
-//    @Async
+    @Async
+    @Transactional
     @Override
     public void addTransaction(Transaction transaction, long accountNumber) {
         var account = getAccount(accountNumber);
@@ -61,13 +63,18 @@ public class TransactionImpl implements ITransactionService {
     }
 
     @Override
-    public List<Transaction> getTransferedTransactions(long accountNumber) {
+    public List<Transaction> getTransferredTransactions(long accountNumber) {
         var sort = Sort.by("timestamp").descending();
         var page = PageRequest.of(0, 2, sort);
 
         return transactionRepository
                 .findByModeAndAccountAccountNumber(TransactionMode.TRANSFER,
                         accountNumber,  page);
+    }
+
+    @Override
+    public long countRecord(TransactionMode mode, long accountNumber) {
+        return transactionRepository.countByModeAndAccountAccountNumber(mode, accountNumber);
     }
 
     private Account getAccount(long accountNumber) {
