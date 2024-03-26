@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v1/transactions")
@@ -20,23 +21,44 @@ public class TransactionController {
     public DatatableDTO creditedTransactions(@RequestHeader long accountNumber,
                                              @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        long startTime = System.currentTimeMillis();
         var results = service.getCreditedTransactions(accountNumber, pageNumber, pageSize);
         var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
 
         var totalRecord = service.countRecord(TransactionMode.CREDIT, accountNumber);
 
+        long endTime = System.currentTimeMillis();
+
+        System.out.println(endTime - startTime + "ms");
+
         return new DatatableDTO(totalRecord, pageNumber, pageSize, transactions);
     }
 
-    @GetMapping("/{accountNumber}/debit")
-    public List<TransactionDTO> debitedTransactions(@RequestHeader long accountNumber) {
-        var results = service.getDebitedTransactions(accountNumber);
-        return results.stream().map(TransactionMapper::dtoMapper).toList();
+    @GetMapping("/debit")
+    public DatatableDTO debitedTransactions(@RequestHeader long accountNumber,
+                                            @RequestParam(required = false, defaultValue = "1") int pageNumber,
+                                            @RequestParam(required = false, defaultValue = "10") int pageSize)
+            throws Exception {
+        var results = service.getDebitedTransactions(accountNumber, pageNumber, pageSize);
+        var transactions = results.thenApplyAsync(result -> result.stream().map(TransactionMapper::dtoMapper).toList());
+//        var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
+
+        var totalRecord = service.countRecord1(TransactionMode.DEBIT, accountNumber);
+
+        CompletableFuture.allOf(results, transactions, totalRecord).join();
+
+        return new DatatableDTO(totalRecord.get(), pageNumber, pageSize, transactions.get());
     }
 
-    @GetMapping("/{accountNumber}/transfer")
-    public List<TransactionDTO> transferedTransactions(@RequestHeader long accountNumber) {
-        var results = service.getTransferredTransactions(accountNumber);
-        return results.stream().map(TransactionMapper::dtoMapper).toList();
+    @GetMapping("/transfer")
+    public DatatableDTO transferredTransactions(@RequestHeader long accountNumber,
+                                                @RequestParam(required = false, defaultValue = "1") int pageNumber,
+                                                @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        var results = service.getTransferredTransactions(accountNumber, pageNumber, pageSize);
+        var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
+
+        var totalRecord = service.countRecord(TransactionMode.TRANSFER, accountNumber);
+
+        return new DatatableDTO(totalRecord, pageNumber, pageSize, transactions);
     }
 }

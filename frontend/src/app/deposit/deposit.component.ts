@@ -12,15 +12,24 @@ import { Datatable } from '../model/datatable';
 @Component({
   selector: 'app-deposit',
   standalone: true,
-  imports: [CurrencyPipe, FormsModule, SidebarComponent, HeaderComponent, ModalComponent, ToastComponent],
+  imports: [
+    CurrencyPipe,
+    FormsModule,
+    SidebarComponent,
+    HeaderComponent,
+    ModalComponent,
+    ToastComponent,
+  ],
   templateUrl: './deposit.component.html',
-  styleUrl: './deposit.component.css'
+  styleUrl: './deposit.component.css',
 })
 export class DepositComponent implements OnInit {
   accountService = inject(AccountService);
   transactionService = inject(TransactionService);
   modalVisible = false;
-  toastHeading = ""; toastDescription = ""; toastVisible = false;
+  toastHeading = '';
+  toastDescription = '';
+  toastVisible = false;
 
   totalPage = Array(1);
   datatable!: Datatable;
@@ -31,18 +40,22 @@ export class DepositComponent implements OnInit {
   }
 
   getTransactions(pageNumber: number) {
-    this.transactionService.getCreditedAmount(pageNumber, this.pageSize).subscribe({
-      next: res => {
-        this.datatable = res;
-        this.totalPage = Array(Math.ceil(this.datatable.totalRecord / this.pageSize));
-      },
-      error: err => {
-        console.log(err);
+    this.transactionService
+      .getCreditedAmount(pageNumber, this.pageSize)
+      .subscribe({
+        next: (res) => {
+          this.datatable = res;
+          this.totalPage = Array(
+            Math.ceil(this.datatable.totalRecord / this.pageSize)
+          );
+        },
+        error: (err) => {
+          console.log(err);
 
-        const error = err.error;
-        this.generateToast(error['title'], error['detail'])
-      }
-    })
+          const error = err.error;
+          this.generateToast(error['title'], error['detail']);
+        },
+      });
   }
 
   onPageChange(pageNumber: number) {
@@ -53,21 +66,21 @@ export class DepositComponent implements OnInit {
     if (form.valid) {
       const balance = form.value.balance;
       this.accountService.depositBalance(balance).subscribe({
-        next: res => {
-          this.generateToast("Success", "Amount deposited");
+        next: (res) => {
+          this.generateToast('Success', 'Amount deposited');
         },
-        error: err => {
+        error: (err) => {
           console.log(err);
 
           const error = err.error;
-          this.generateToast(error['title'], error['detail'])
+          this.generateToast(error['title'], error['detail']);
         },
         complete: () => {
           form.reset();
-          this.getTransactions(1);
+          setTimeout(() => this.getTransactions(1), 2000);
           this.modalVisible = false;
-        }
-      })
+        },
+      });
     }
   }
 
@@ -79,6 +92,5 @@ export class DepositComponent implements OnInit {
     setTimeout(() => {
       this.toastVisible = false;
     }, 5000);
-
   }
 }

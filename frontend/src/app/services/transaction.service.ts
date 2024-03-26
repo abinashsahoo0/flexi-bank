@@ -15,4 +15,14 @@ export class TransactionService {
     return this.http.get<Datatable>(
       this.BASE_URL + "/credit?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
   }
+  
+  getDebitedAmount(pageNumber: number, pageSize: number) {
+    return this.http.get<Datatable>(
+      this.BASE_URL + "/debit?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
+  }
+  
+  getTransferredAmount(pageNumber: number, pageSize: number) {
+    return this.http.get<Datatable>(
+      this.BASE_URL + "/transfer?pageNumber=" + pageNumber + "&pageSize=" + pageSize);
+  }
 }

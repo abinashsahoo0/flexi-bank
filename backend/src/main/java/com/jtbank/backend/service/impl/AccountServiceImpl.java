@@ -79,8 +79,6 @@ public class AccountServiceImpl implements IAccountService {
         var extensionName = fileName.substring(fileName.lastIndexOf('.'));
         var name = fileName.substring(0, fileName.lastIndexOf('.'));
 
-        fileName = uploadFileLocation + name + "-" + System.currentTimeMillis() + extensionName;
-
         var fos = new FileOutputStream(fileName);
         fos.write(file.getBytes());
 

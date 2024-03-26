@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -42,14 +43,16 @@ public class TransactionImpl implements ITransactionService {
         transactionRepository.save(transaction);
     }
 
+    @Async
     @Override
-    public List<Transaction> getDebitedTransactions(long accountNumber) {
+    public CompletableFuture<List<Transaction>> getDebitedTransactions(long accountNumber, int pageNumber, int pageSize) {
         var sort = Sort.by("timestamp").descending();
-        var page = PageRequest.of(0, 2, sort);
+        var page = PageRequest.of(pageNumber - 1, pageSize, sort);
 
-        return transactionRepository
+        var result = transactionRepository
                 .findByModeAndAccountAccountNumber(TransactionMode.DEBIT,
-                        accountNumber,  page);
+                        accountNumber, page);
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override
@@ -59,22 +62,29 @@ public class TransactionImpl implements ITransactionService {
 
         return transactionRepository
                 .findByModeAndAccountAccountNumber(TransactionMode.CREDIT,
-                        accountNumber,  page);
+                        accountNumber, page);
     }
 
     @Override
-    public List<Transaction> getTransferredTransactions(long accountNumber) {
+    public List<Transaction> getTransferredTransactions(long accountNumber, int pageNumber, int pageSize) {
         var sort = Sort.by("timestamp").descending();
-        var page = PageRequest.of(0, 2, sort);
+        var page = PageRequest.of(pageNumber - 1, pageSize, sort);
 
         return transactionRepository
                 .findByModeAndAccountAccountNumber(TransactionMode.TRANSFER,
-                        accountNumber,  page);
+                        accountNumber, page);
     }
 
     @Override
     public long countRecord(TransactionMode mode, long accountNumber) {
         return transactionRepository.countByModeAndAccountAccountNumber(mode, accountNumber);
+    }
+
+    @Async
+    @Override
+    public CompletableFuture<Long> countRecord1(TransactionMode mode, long accountNumber) {
+        var result = transactionRepository.countByModeAndAccountAccountNumber(mode, accountNumber);
+        return CompletableFuture.completedFuture(result);
     }
 
     private Account getAccount(long accountNumber) {
