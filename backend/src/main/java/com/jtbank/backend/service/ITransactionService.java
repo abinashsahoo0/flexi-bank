@@ -15,6 +15,8 @@ public interface ITransactionService {
 
     List<Transaction> getTransferredTransactions(long accountNumber, int pageSize, int pageNumber);
 
+    CompletableFuture<List<Transaction>> getLast5Transaction(long accountNumber);
+
     long countRecord(TransactionMode mode, long accountNumber);
 
     CompletableFuture<Long> countRecord1(TransactionMode mode, long accountNumber);

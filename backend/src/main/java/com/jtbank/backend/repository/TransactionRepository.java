@@ -13,6 +13,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
      findByModeAndAccountAccountNumber(TransactionMode mode, long accountNumber,
                                        Pageable pageable);
 
+    List<Transaction>
+     findTop5ByAccountAccountNumberOrderByTimestampDesc(long accountNumber);
+
     long
     countByModeAndAccountAccountNumber(TransactionMode mode, long accountNumber);
 }

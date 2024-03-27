@@ -21,15 +21,10 @@ public class TransactionController {
     public DatatableDTO creditedTransactions(@RequestHeader long accountNumber,
                                              @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        long startTime = System.currentTimeMillis();
         var results = service.getCreditedTransactions(accountNumber, pageNumber, pageSize);
         var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
 
         var totalRecord = service.countRecord(TransactionMode.CREDIT, accountNumber);
-
-        long endTime = System.currentTimeMillis();
-
-        System.out.println(endTime - startTime + "ms");
 
         return new DatatableDTO(totalRecord, pageNumber, pageSize, transactions);
     }

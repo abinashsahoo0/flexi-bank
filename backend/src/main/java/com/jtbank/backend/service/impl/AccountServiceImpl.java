@@ -90,7 +90,6 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public void depositBalance(long accountNumber, double balance) {
-        System.out.println(Thread.currentThread().getName());
         var account = getAccount(accountNumber);
         accountRepository.addBalance(accountNumber, balance);
 

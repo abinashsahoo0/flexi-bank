@@ -75,6 +75,13 @@ public class TransactionImpl implements ITransactionService {
                         accountNumber, page);
     }
 
+    @Async
+    @Override
+    public CompletableFuture<List<Transaction>> getLast5Transaction(long accountNumber) {
+        var result = transactionRepository.findTop5ByAccountAccountNumberOrderByTimestampDesc(accountNumber);
+        return CompletableFuture.completedFuture(result);
+    }
+
     @Override
     public long countRecord(TransactionMode mode, long accountNumber) {
         return transactionRepository.countByModeAndAccountAccountNumber(mode, accountNumber);

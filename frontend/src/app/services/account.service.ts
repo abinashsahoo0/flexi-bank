@@ -1,8 +1,9 @@
   import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Account } from '../model/account';
+import { environment } from '../../environments/environment.development';
 
-export const BASE_URL = 'http://localhost:1205/banking/api/v1/accounts';
+export const BASE_URL = environment.base_url + '/accounts';
 
 @Injectable({
   providedIn: 'root'

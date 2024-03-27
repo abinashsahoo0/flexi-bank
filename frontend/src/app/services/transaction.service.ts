@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Datatable } from '../model/datatable';
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TransactionService {
-  BASE_URL = "http://localhost:1205/banking/api/v1/transactions"
+  BASE_URL = environment.base_url + "/transactions"
   http = inject(HttpClient);
 
   constructor() { }
