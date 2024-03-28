@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -19,8 +20,12 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var path = request.getRequestURI();
 
-        if(path.contains("login") || path.contains("register") || path.contains("create")) {
-            filterChain.doFilter(request, response);
+        var passedPaths = List.of("login", "register", "create", "swagger", "api-doc");
+        for (var passedPath : passedPaths) {
+            if (path.contains(passedPath)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
         String token = request.getHeader("Authorization");
