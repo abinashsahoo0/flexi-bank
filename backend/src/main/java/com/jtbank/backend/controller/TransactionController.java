@@ -18,7 +18,7 @@ public class TransactionController {
     private final ITransactionService service;
 
     @GetMapping("/credit")
-    public DatatableDTO creditedTransactions(@RequestHeader long accountNumber,
+    public DatatableDTO creditedTransactions(@RequestAttribute long accountNumber,
                                              @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
         var results = service.getCreditedTransactions(accountNumber, pageNumber, pageSize);
@@ -30,7 +30,7 @@ public class TransactionController {
     }
 
     @GetMapping("/debit")
-    public DatatableDTO debitedTransactions(@RequestHeader long accountNumber,
+    public DatatableDTO debitedTransactions(@RequestAttribute long accountNumber,
                                             @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                             @RequestParam(required = false, defaultValue = "10") int pageSize)
             throws Exception {
@@ -46,7 +46,7 @@ public class TransactionController {
     }
 
     @GetMapping("/transfer")
-    public DatatableDTO transferredTransactions(@RequestHeader long accountNumber,
+    public DatatableDTO transferredTransactions(@RequestAttribute long accountNumber,
                                                 @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                                 @RequestParam(required = false, defaultValue = "10") int pageSize) {
         var results = service.getTransferredTransactions(accountNumber, pageNumber, pageSize);

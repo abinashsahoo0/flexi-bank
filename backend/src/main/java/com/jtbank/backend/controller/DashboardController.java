@@ -5,10 +5,7 @@ import com.jtbank.backend.dto.DashboardDTO;
 import com.jtbank.backend.mapper.TransactionMapper;
 import com.jtbank.backend.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +17,7 @@ public class DashboardController {
     private final ITransactionService transactionService;
 
     @GetMapping
-    public DashboardDTO dashboardDetails(@RequestHeader long accountNumber) throws ExecutionException, InterruptedException {
+    public DashboardDTO dashboardDetails(@RequestAttribute long accountNumber) throws ExecutionException, InterruptedException {
         var numberOfDeposit = transactionService.countRecord1(TransactionMode.CREDIT, accountNumber);
         var numberOfWithdrawal = transactionService.countRecord1(TransactionMode.DEBIT, accountNumber);
         var numberOfTransfer = transactionService.countRecord1(TransactionMode.TRANSFER, accountNumber);

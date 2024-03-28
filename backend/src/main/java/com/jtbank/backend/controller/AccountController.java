@@ -1,13 +1,11 @@
 package com.jtbank.backend.controller;
 
-import com.jtbank.backend.dto.AccountAddressDTO;
-import com.jtbank.backend.dto.AccountRequestDTO;
-import com.jtbank.backend.dto.AccountResponseDTO;
-import com.jtbank.backend.dto.UpdateDTO;
+import com.jtbank.backend.dto.*;
 import com.jtbank.backend.mapper.AccountMapper;
 import com.jtbank.backend.model.Account;
 import com.jtbank.backend.model.Credential;
 import com.jtbank.backend.service.IAccountService;
+import com.jtbank.backend.service.IJWTService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,8 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AccountController {
     private final IAccountService accountService;
+    private final IJWTService jwtService;
 
-    @PostMapping
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountResponseDTO createAccount(@Valid @RequestBody AccountRequestDTO dto) {
         var account = AccountMapper.modelMapper(dto);
@@ -41,16 +40,18 @@ public class AccountController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public AccountResponseDTO accountByEmailAndPassword(@RequestBody Credential credential) {
-        var result = accountService
+    public TokenDTO accountByEmailAndPassword(@RequestBody Credential credential) {
+        var account = accountService
                 .getAccountByEmailAndPassword(credential.getAccountEmail(),
                         credential.getAccountPassword());
-        return AccountMapper.dtoMapper(result);
+
+        var token = jwtService.generateToken(String.valueOf(account.getAccountNumber()));
+        return new TokenDTO(token);
     }
 
     @PostMapping("/image")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public AccountResponseDTO uploadPicture(@RequestHeader long accountNumber,
+    public AccountResponseDTO uploadPicture(@RequestAttribute long accountNumber,
                                           @RequestParam("file")MultipartFile file) throws Exception {
         if(file.isEmpty())
             throw new RuntimeException("Image not found");
@@ -70,19 +71,19 @@ public class AccountController {
 
     @PatchMapping("/deposit/{balance}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deposit(@RequestHeader long accountNumber, @PathVariable double balance) {
+    public void deposit(@RequestAttribute long accountNumber, @PathVariable double balance) {
         accountService.depositBalance(accountNumber, balance);
     }
 
     @PatchMapping("/withdrawal/{balance}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void withdraw(@RequestHeader long accountNumber, @PathVariable double balance) {
+    public void withdraw(@RequestAttribute long accountNumber, @PathVariable double balance) {
         accountService.withdrawalBalance(accountNumber, balance);
     }
 
     @PatchMapping("/transfer/{receiver}/balance/{balance}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void transfer(@RequestHeader("accountNumber") long sender, @PathVariable long receiver, @PathVariable double balance) {
+    public void transfer(@RequestAttribute("accountNumber") long sender, @PathVariable long receiver, @PathVariable double balance) {
         accountService.transfer(sender, receiver, balance);
     }
 
@@ -117,7 +118,7 @@ public class AccountController {
     }
 
     @GetMapping("/current")
-    public AccountResponseDTO currentAccountByNumber(@RequestHeader long accountNumber) {
+    public AccountResponseDTO currentAccountByNumber(@RequestAttribute long accountNumber) {
         var result = accountService.getAccount(accountNumber);
         return AccountMapper.dtoMapper(result);
     }
