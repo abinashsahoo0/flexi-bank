@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +23,7 @@ import java.util.List;
 public class AccountController {
     private final IAccountService accountService;
     private final IJWTService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -41,10 +44,11 @@ public class AccountController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public TokenDTO accountByEmailAndPassword(@RequestBody Credential credential) {
-        var account = accountService
-                .getAccountByEmailAndPassword(credential.getAccountEmail(),
-                        credential.getAccountPassword());
+        var auth = new UsernamePasswordAuthenticationToken(credential.getAccountEmail(),
+                credential.getAccountPassword());
+        authenticationManager.authenticate(auth);
 
+        var account = accountService.getAccountByEmail(credential.getAccountEmail());
         var token = jwtService.generateToken(String.valueOf(account.getAccountNumber()));
         return new TokenDTO(token);
     }

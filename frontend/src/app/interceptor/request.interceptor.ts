@@ -5,14 +5,14 @@ export const requestInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const account = localStorage.getItem("account");
-  if (!account)
+  const token = localStorage.getItem("token");
+  if (!token)
     location.href = "/signin"
-
-  const accountNumber = account as string;
+  
   const cloneReq = req.clone({
     setHeaders: {
-      accountNumber
+      "name": "smruti",
+      "Authorization": "Bearer " + token
     }
   });
 

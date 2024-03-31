@@ -4,10 +4,12 @@ import com.jtbank.backend.constant.TransactionMode;
 import com.jtbank.backend.dto.DatatableDTO;
 import com.jtbank.backend.dto.TransactionDTO;
 import com.jtbank.backend.mapper.TransactionMapper;
+import com.jtbank.backend.repository.AccountRepository;
 import com.jtbank.backend.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,11 +18,14 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class TransactionController {
     private final ITransactionService service;
-
+    private final AccountRepository accountRepository;
     @GetMapping("/credit")
-    public DatatableDTO creditedTransactions(@RequestAttribute long accountNumber,
+    public DatatableDTO creditedTransactions(Principal principal,
                                              @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
+        var account = accountRepository.findByEmail(principal.getName()).orElseThrow();
+        var accountNumber = account.getAccountNumber();
+        System.out.println(accountNumber);
         var results = service.getCreditedTransactions(accountNumber, pageNumber, pageSize);
         var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
 

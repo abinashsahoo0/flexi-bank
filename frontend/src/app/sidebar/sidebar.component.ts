@@ -12,7 +12,7 @@ export class SidebarComponent {
   router = inject(Router);
   
   onLogout() {
-    localStorage.removeItem("account");
+    localStorage.removeItem("token");
     this.router.navigateByUrl("/signin")
   }
 }

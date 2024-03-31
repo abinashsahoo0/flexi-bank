@@ -13,11 +13,13 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequestMapping("/api/v1/dashboards")
 @RequiredArgsConstructor
+@CrossOrigin
 public class DashboardController {
     private final ITransactionService transactionService;
 
     @GetMapping
     public DashboardDTO dashboardDetails(@RequestAttribute long accountNumber) throws ExecutionException, InterruptedException {
+
         var numberOfDeposit = transactionService.countRecord1(TransactionMode.CREDIT, accountNumber);
         var numberOfWithdrawal = transactionService.countRecord1(TransactionMode.DEBIT, accountNumber);
         var numberOfTransfer = transactionService.countRecord1(TransactionMode.TRANSFER, accountNumber);

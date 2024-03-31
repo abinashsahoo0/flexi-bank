@@ -19,4 +19,9 @@ upload:
   file:
     name: "profile-pictures/"
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 

@@ -10,6 +10,7 @@ import com.jtbank.backend.service.ITransactionService;
 import com.jtbank.backend.utility.GenerateAccountNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class AccountServiceImpl implements IAccountService {
     private final AccountRepository accountRepository;
     private final AddressRepository addressRepository;
     private final ITransactionService transactionService;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${upload.file.name}")
     private String uploadFileLocation;
@@ -34,6 +36,9 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     public Account createAccount(Account account) {
         account.setAccountNumber(GenerateAccountNumber.generate());
+        var bcrypt = passwordEncoder.encode(account.getCredential().getAccountPassword());
+        account.getCredential().setAccountPassword(bcrypt);
+
         accountRepository.save(account);
         return account;
     }
@@ -41,6 +46,9 @@ public class AccountServiceImpl implements IAccountService {
     @Override
     public Account saveAccount(Account account) {
         account.setAccountNumber(GenerateAccountNumber.generate());
+        var bcrypt = passwordEncoder.encode(account.getCredential().getAccountPassword());
+        account.getCredential().setAccountPassword(bcrypt);
+
         var address = account.getAddress();
         address.setAccount(account);
 
