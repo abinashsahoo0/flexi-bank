@@ -23,7 +23,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public class JWTFilter extends OncePerRequestFilter {
     private final IJWTService service;
     private final ObjectMapper objectMapper;
@@ -53,13 +52,13 @@ public class JWTFilter extends OncePerRequestFilter {
             if (accountNumber == null || accountNumber.isEmpty() || accountNumber.isBlank())
                 throw new RuntimeException("Token not found");
 
-            var account = accountRepository.findByAccountNumber(Long.valueOf(accountNumber)).orElseThrow();
+            var account = accountRepository.findByAccountNumber(Long.parseLong(accountNumber)).orElseThrow();
             var auth = new UsernamePasswordAuthenticationToken(account.getCredential().getAccountEmail(),
-                    account.getCredential().getAccountPassword(), List.of(() -> ""));
+                    account.getCredential().getAccountPassword(), null);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-            System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-//            request.setAttribute("accountNumber", accountNumber);
+            request.setAttribute("accountNumber", accountNumber);
+
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             var problemDetails = ProblemDetail.forStatus(400);

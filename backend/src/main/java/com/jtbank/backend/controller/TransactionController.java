@@ -20,12 +20,9 @@ public class TransactionController {
     private final ITransactionService service;
     private final AccountRepository accountRepository;
     @GetMapping("/credit")
-    public DatatableDTO creditedTransactions(Principal principal,
+    public DatatableDTO creditedTransactions(@RequestAttribute long accountNumber,
                                              @RequestParam(required = false, defaultValue = "1") int pageNumber,
                                              @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        var account = accountRepository.findByEmail(principal.getName()).orElseThrow();
-        var accountNumber = account.getAccountNumber();
-        System.out.println(accountNumber);
         var results = service.getCreditedTransactions(accountNumber, pageNumber, pageSize);
         var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
 
