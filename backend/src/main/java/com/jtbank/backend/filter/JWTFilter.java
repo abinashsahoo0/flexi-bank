@@ -2,19 +2,15 @@ package com.jtbank.backend.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jtbank.backend.repository.AccountRepository;
-import com.jtbank.backend.service.IAccountService;
 import com.jtbank.backend.service.IJWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -69,6 +65,5 @@ public class JWTFilter extends OncePerRequestFilter {
             response.setStatus(400);
             response.getWriter().println(objectMapper.writeValueAsString(problemDetails));
         }
-
     }
 }

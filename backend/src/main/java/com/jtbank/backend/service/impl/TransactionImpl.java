@@ -5,7 +5,6 @@ import com.jtbank.backend.model.Account;
 import com.jtbank.backend.model.Transaction;
 import com.jtbank.backend.repository.AccountRepository;
 import com.jtbank.backend.repository.TransactionRepository;
-import com.jtbank.backend.service.IAccountService;
 import com.jtbank.backend.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

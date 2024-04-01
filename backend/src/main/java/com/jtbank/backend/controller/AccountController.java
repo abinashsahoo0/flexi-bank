@@ -2,7 +2,6 @@ package com.jtbank.backend.controller;
 
 import com.jtbank.backend.dto.*;
 import com.jtbank.backend.mapper.AccountMapper;
-import com.jtbank.backend.model.Account;
 import com.jtbank.backend.model.Credential;
 import com.jtbank.backend.service.IAccountService;
 import com.jtbank.backend.service.IJWTService;

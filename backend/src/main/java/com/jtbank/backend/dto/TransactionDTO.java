@@ -2,7 +2,6 @@ package com.jtbank.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jtbank.backend.constant.TransactionMode;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 

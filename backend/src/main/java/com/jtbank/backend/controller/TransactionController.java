@@ -2,15 +2,11 @@ package com.jtbank.backend.controller;
 
 import com.jtbank.backend.constant.TransactionMode;
 import com.jtbank.backend.dto.DatatableDTO;
-import com.jtbank.backend.dto.TransactionDTO;
 import com.jtbank.backend.mapper.TransactionMapper;
-import com.jtbank.backend.repository.AccountRepository;
 import com.jtbank.backend.service.ITransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -18,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class TransactionController {
     private final ITransactionService service;
-    private final AccountRepository accountRepository;
+
     @GetMapping("/credit")
     public DatatableDTO creditedTransactions(@RequestAttribute long accountNumber,
                                              @RequestParam(required = false, defaultValue = "1") int pageNumber,
@@ -38,7 +34,6 @@ public class TransactionController {
             throws Exception {
         var results = service.getDebitedTransactions(accountNumber, pageNumber, pageSize);
         var transactions = results.thenApplyAsync(result -> result.stream().map(TransactionMapper::dtoMapper).toList());
-//        var transactions = results.stream().map(TransactionMapper::dtoMapper).toList();
 
         var totalRecord = service.countRecord1(TransactionMode.DEBIT, accountNumber);
 

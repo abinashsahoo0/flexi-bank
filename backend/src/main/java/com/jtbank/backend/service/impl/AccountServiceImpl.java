@@ -14,10 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -52,7 +50,7 @@ public class AccountServiceImpl implements IAccountService {
         var address = account.getAddress();
         address.setAccount(account);
 
-//        addressRepository.save(address);
+        // addressRepository.save(address);
         accountRepository.save(account);
         return account;
     }
@@ -73,7 +71,7 @@ public class AccountServiceImpl implements IAccountService {
         account.getAddress().setAccount(existingAccount);
         existingAccount.setAddress(account.getAddress());
 
-//        addressRepository.save(account.getAddress());
+        // addressRepository.save(account.getAddress());
         accountRepository.save(existingAccount);
 
         return existingAccount;
@@ -86,19 +84,21 @@ public class AccountServiceImpl implements IAccountService {
         var fileName = file.getOriginalFilename();
         var extensionName = fileName.substring(fileName.lastIndexOf('.'));
         var name = fileName.substring(0, fileName.lastIndexOf('.'));
+        var newName = name + "-" + System.currentTimeMillis() + extensionName;
 
-        var fos = new FileOutputStream(fileName);
+        var fos = new FileOutputStream(newName);
         fos.write(file.getBytes());
 
-        account.setProfilePicture(fileName);
+        account.setProfilePicture(newName);
         accountRepository.save(account);
+
         fos.close();
         return account;
     }
 
     @Override
     public void depositBalance(long accountNumber, double balance) {
-        var account = getAccount(accountNumber);
+        getAccount(accountNumber);
         accountRepository.addBalance(accountNumber, balance);
 
         var transaction = new Transaction();
@@ -148,15 +148,16 @@ public class AccountServiceImpl implements IAccountService {
         transactionService.addTransaction(transaction, sender);
     }
 
-
     @Override
     public Account deleteAccount(long accountNumber) {
         var account = getAccount(accountNumber);
         accountRepository.delete(account);
 
-        /*if (account.getAddress() != null) {
-            addressRepository.delete(account.getAddress());
-        }*/
+        /*
+         * if (account.getAddress() != null) {
+         * addressRepository.delete(account.getAddress());
+         * }
+         */
 
         return account;
     }
@@ -193,8 +194,8 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     public Account getAccountByEmailAndPassword(String email, String password) {
-        return accountRepository.
-                findByCredentialAccountEmailAndCredentialAccountPassword(email, password).orElseThrow();
+        return accountRepository.findByCredentialAccountEmailAndCredentialAccountPassword(email, password)
+                .orElseThrow();
     }
 
     @Override

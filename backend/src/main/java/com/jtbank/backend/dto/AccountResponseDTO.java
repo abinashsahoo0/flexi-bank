@@ -1,7 +1,6 @@
 package com.jtbank.backend.dto;
 
 import com.jtbank.backend.constant.AccountType;
-import jakarta.validation.constraints.NotNull;
 
 public record AccountResponseDTO(
         long accountNumber,
