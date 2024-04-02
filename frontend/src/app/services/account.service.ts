@@ -15,7 +15,7 @@ export class AccountService {
   constructor() { }
 
   createAccount(account: any) {
-    return this.http.post(BASE_URL, account, this.noauth);
+    return this.http.post(BASE_URL + "/register", account, this.noauth);
   }
 
   loginAccount(account: any) {
