@@ -1,6 +1,6 @@
-# Banking applcation
+# Banking Application
 
-Secure Banking Apllication with Spring Boot
+Secure Banking Application with Spring Boot
 
 This application provides a powerful tool for bank, operations such as holding up of accounting information’s in database and also able to keep daily banking transactions. This application also helps in adding details of new customers such as account no; it has also a features to deletion, modification of the existing customers, and also provides fast searching of data and calculating of data with less time. This software helps in reducing the clerical work of the staffs since almost all of the work can be done by the software.
 
